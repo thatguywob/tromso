@@ -25,6 +25,11 @@ if [ ! -s /etc/machine-id ]; then
 fi
 
 dbus-daemon --system --fork --nopidfile
+# The tuna-os remote declares AuthenticatorName=org.flatpak.Authenticator.Oci,
+# which flatpak activates on the session bus. A build container has none, so
+# installing from it fails with "Cannot autolaunch D-Bus without X11 $DISPLAY".
+DBUS_SESSION_BUS_ADDRESS=$(dbus-daemon --session --fork --print-address)
+export DBUS_SESSION_BUS_ADDRESS
 sleep 1
 
 if [ -d "${FLATPAK_CACHE}/repo/refs" ]; then

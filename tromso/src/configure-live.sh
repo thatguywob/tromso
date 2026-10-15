@@ -231,8 +231,10 @@ DTEOF
 # ── Polkit rules for live installer ──────────────────────────────────────────
 # Frontends escalate via `flatpak-spawn --host pkexec /usr/local/bin/fisherman`;
 # expose the flatpak-bundled binary there.
-FISHERMAN_BIN=$(find /var/lib/flatpak/app/${INSTALLER_APP_ID} -path '*/files/bin/fisherman' -type f 2>/dev/null | head -1)
-if [ -n "$FISHERMAN_BIN" ]; then
+# The image ships no findutils, so resolve the binary through flatpak's
+# stable `current/active` deploy link rather than searching for it.
+FISHERMAN_BIN="/var/lib/flatpak/app/${INSTALLER_APP_ID}/current/active/files/bin/fisherman"
+if [ -f "$FISHERMAN_BIN" ]; then
     mkdir -p /usr/local/bin
     ln -sf "${FISHERMAN_BIN}" /usr/local/bin/fisherman
 else

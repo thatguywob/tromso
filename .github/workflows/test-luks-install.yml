@@ -18,6 +18,7 @@ on:
       - 'Justfile'
       - 'iso.justfile'
       - 'scripts/luks-install-qemu.sh'
+      - 'scripts/lib-install-qemu.sh'
       - 'scripts/fisherman-install.sh'
       - '.github/workflows/test-luks-install.yml'
   workflow_dispatch:

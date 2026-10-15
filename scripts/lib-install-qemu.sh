@@ -9,7 +9,7 @@
 #   install_qemu_init            # sets DISK/PAYLOAD_IMAGE/SSH/SCP/INSTALL_IMAGE/
 #                                 # COMPOSEFS_BACKEND/BOOTLOADER/FILESYSTEM,
 #                                 # mounts the scratch disk
-#   install_qemu_run_fisherman <recipe_tmp_var_name> <recipe_json_composefs> <recipe_json_bootcdirect>
+#   install_qemu_run_fisherman <recipe_tmp_path> <remote_recipe_name> <composefs_json> <bootcdirect_json>
 #   install_qemu_shutdown
 
 set -euo pipefail

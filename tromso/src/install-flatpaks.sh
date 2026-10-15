@@ -17,6 +17,9 @@ FLATPAK_CACHE="/var/cache/flatpak-dl"
 mkdir -p "${FLATPAK_CACHE}/tmp"
 export TMPDIR="${FLATPAK_CACHE}/tmp"
 mkdir -p /run/dbus
+# flatpak's OCI token fetch opens /var/tmp, which the build container lacks
+# ("Failed to get tokens for ref: opendir(/var/tmp)").
+mkdir -p -m 1777 "$(readlink -f /var/tmp)"
 
 # The system dbus-daemon refuses to start without a valid machine-id. Minimal
 # build containers don't have one populated, so generate it on demand.

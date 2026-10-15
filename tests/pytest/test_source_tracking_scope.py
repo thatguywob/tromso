@@ -1,15 +1,15 @@
 """The source-tracking scope must agree with the shipping element graph.
 
 ``.github/workflows/track-bst-sources.yml`` bumps ``ref:`` for a *path*
-allowlist (``elements/tromso elements/gnomeos-deps``), while what actually
-ships is a *graph*: whatever ``oci/tromso.bst`` transitively depends on.
-Nothing keeps those two sets in agreement, and they have already diverged --
-``gnomeos-deps/bootc.bst`` is tracked but orphaned, so 7 automated bumps
-carried it from v1.15.0 to v1.16.13 while the element the image really
-installs, ``kde-linux-deps/bootc.bst``, sat untracked on v1.15.1 since the
+allowlist (``elements/tromso``), while what actually ships is a *graph*:
+whatever ``oci/tromso.bst`` transitively depends on.  Nothing keeps those two
+sets in agreement, and they once diverged -- the orphaned
+``gnomeos-deps/bootc.bst`` was tracked, so 7 automated bumps carried it from
+v1.15.0 to v1.16.13 while the element the image really installs,
+``kde-linux-deps/bootc.bst``, sat untracked on v1.15.1 since the
 kde-build-meta consolidation.  Two elements, one upstream
-(``github:bootc-dev/bootc.git``), and the tracked one is the one nothing
-builds.
+(``github:bootc-dev/bootc.git``), and the tracked one was the one nothing
+built.  The orphan was removed in tuna-os/tromso#351.
 
 That is the specific failure this file exists to catch: a tracked element and
 an untracked element claiming the *same* upstream, which makes the ref bumps
@@ -48,18 +48,10 @@ URL_RE = re.compile(r"^\s*(?:-\s+)?url:\s*(\S+)\s*$")
 PATHS_RE = re.compile(r'^\s*paths:\s*"([^"]+)"\s*$', re.MULTILINE)
 EXCLUDE_RE = re.compile(r'^\s*TRACK_EXCLUDE="([^"]*)"\s*$', re.MULTILINE)
 
-# The one upstream already in this state, kept here so the count cannot grow.
-#
-# Repointing tracking at the shipped element is a one-line edit to
-# `paths:` in track-bst-sources.yml, but it cannot land from the same PR as
-# this test: `elements/gnomeos-deps/` holds nothing but the orphan, so
-# removing the orphan and leaving the workflow pointed at a directory that no
-# longer exists makes tracking silently skip it (see test_tracked_paths_exist).
-# The workflow edit and the removal have to land together, and a GitHub App
-# without the Workflows permission cannot push `.github/workflows/**` at all.
-# Tracked in tuna-os/tromso#318. Drop this entry when that lands -- the
-# staleness test below will insist on it.
-SPLIT_UPSTREAM_GRANDFATHERED = frozenset({"github:bootc-dev/bootc.git"})
+# Upstreams already in this state, kept here so the count cannot grow. Empty
+# since tuna-os/tromso#351 removed the orphaned gnomeos-deps/bootc.bst and
+# dropped `elements/gnomeos-deps` from the tracking `paths:`.
+SPLIT_UPSTREAM_GRANDFATHERED = frozenset()
 
 
 def _local_elements():

@@ -44,7 +44,7 @@ jobs:
       matrix:
         include:
           - group: elements
-            paths: "elements/tromso elements/gnomeos-deps"
+            paths: "elements/tromso"
             branch: auto/track-elements
             title: "chore(deps): track element sources"
             automerge: true

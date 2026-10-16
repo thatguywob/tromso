@@ -4,9 +4,9 @@
 
 **Tromso** is a BuildStream-based KDE Linux OCI/bootc image, modeled on Project Bluefin's
 [`projectbluefin/dakota`](https://github.com/projectbluefin/dakota). It builds KDE Plasma 6 on top
-of freedesktop-sdk and publishes a bootable OCI image to `ghcr.io/tuna-os/tromso`.
+of freedesktop-sdk and is designed to publish a bootable OCI image to `ghcr.io/tuna-os/tromso`.
 
-**Status: Builds successfully and boots to a functional KDE Plasma 6 Wayland desktop.**
+**Status: Alpha — No installable artifact published yet.** The project is under active development. See [ROADMAP.md](ROADMAP.md) for release gates and [#278](https://github.com/tuna-os/tromso/issues/278) for current blockers. When a build is published, installation and verification instructions below will become available.
 
 > **Attribution.** Tromso reuses configuration and helper scripts derived from
 > [`ublue-os/aurora`](https://github.com/ublue-os/aurora) and the former
@@ -84,6 +84,8 @@ ssh -p 2222 root@localhost
 
 ## CI/CD — multi-runner BuildStream
 
+> **Note:** This section documents the planned CI/CD architecture. The pipeline code is in place, but the build workflow has not yet completed successfully to publish an image. Track [#278](https://github.com/tuna-os/tromso/issues/278) for progress.
+
 The sole image-build workflow (`.github/workflows/build-tromso-multirunner.yml`)
 splits the BuildStream graph across runners, merges the output CAS, builds
 the final target, and pushes the result to GHCR:
@@ -111,11 +113,13 @@ See `AGENTS.md` for full conventions and workflows.
 
 ## Verifying Signatures
 
+> **Note:** Signature verification instructions below will apply once the first image is published. Currently, no artifacts exist at `ghcr.io/tuna-os/tromso` or as published ISOs. See [#278](https://github.com/tuna-os/tromso/issues/278).
+
 GitHub Actions OIDC uses [cosign](https://github.com/sigstore/cosign) to sign OCI
 images and live ISOs without a key. Thus, no long-lived signer key can leak or
 need rotation.
 
-**OCI images:**
+**OCI images (when available):**
 
 ```bash
 cosign verify ghcr.io/tuna-os/tromso:latest \
@@ -123,8 +127,8 @@ cosign verify ghcr.io/tuna-os/tromso:latest \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
 
-**Live ISOs** (the workflow publishes `.sig` and `.cert` beside each dated ISO,
-for example `tromso-live-<date>-<sha>.iso.sig`):
+**Live ISOs (when available)** — the workflow will publish `.sig` and `.cert` beside each dated ISO,
+for example `tromso-live-<date>-<sha>.iso.sig`:
 
 ```bash
 cosign verify-blob tromso-live-<date>-<sha>.iso \
@@ -144,8 +148,10 @@ cosign verify-blob tromso-live-<date>-<sha>.iso \
 
 ## ISO Builder (merged from tromso-iso)
 
+> **Note:** The ISO builder is ready; live ISO publication is blocked by the same build issue affecting OCI images (see [#278](https://github.com/tuna-os/tromso/issues/278)).
+
 This repository contains and maintains the tools for the live ISO. Build a
-systemd-boot UEFI ISO from the published Tromso payload, then boot it in QEMU:
+systemd-boot UEFI ISO from the Tromso OCI payload, then boot it in QEMU:
 
 ```bash
 just iso-sd-boot tromso

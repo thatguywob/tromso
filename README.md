@@ -84,7 +84,7 @@ ssh -p 2222 root@localhost
 
 ## CI/CD — multi-runner BuildStream
 
-> **Note:** The build workflow has not yet run successfully. No image has been published yet. See [#278](https://github.com/tuna-os/tromso/issues/278).
+> **Note:** The build workflow has not yet run successfully. It has not published an image yet. See [#278](https://github.com/tuna-os/tromso/issues/278).
 
 The sole image-build workflow (`.github/workflows/build-tromso-multirunner.yml`)
 splits the BuildStream graph across runners, merges the output CAS, builds
@@ -148,7 +148,7 @@ cosign verify-blob tromso-live-<date>-<sha>.iso \
 
 ## ISO Builder (merged from tromso-iso)
 
-> **Note:** Live ISO publication is blocked. See [#278](https://github.com/tuna-os/tromso/issues/278).
+> **Note:** Build failures prevent live ISO publication. See [#278](https://github.com/tuna-os/tromso/issues/278).
 
 This repository contains and maintains the tools for the live ISO. Build a
 systemd-boot UEFI ISO from the Tromso OCI payload, then boot it in QEMU:
